@@ -1,0 +1,962 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AgroDecide · Wireframes del MVP</title>
+<style>
+:root {
+  background: #edf1f4;
+  color: #171c22;
+  font: 100%/1.55 system-ui, sans-serif;
+}
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0 auto;
+  max-width: 96rem;
+  padding: clamp(.65rem, 2vw, 2rem);
+}
+h1, h2, h3 {
+  margin: 0;
+  line-height: 1.22;
+}
+h2 {
+  margin: 0 0 .8rem;
+}
+a {
+  color: #173859;
+  text-underline-offset: .2em;
+}
+nav ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .35rem 1.25rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+main > section {
+  border-top: 1px solid #aab3bf;
+  margin: 2rem 0;
+  padding-top: 1.4rem;
+  scroll-margin-top: 1rem;
+}
+.boards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: start;
+}
+.variant {
+  min-width: 0;
+  margin: 0;
+}
+.variant.web {
+  width: min(100%, 54rem);
+  flex: 1 1 42rem;
+}
+.variant.mobile {
+  width: min(100%, 24.375rem);
+}
+figcaption {
+  margin: 0 0 .35rem;
+  font-weight: 650;
+}
+.frame {
+  border: 1px solid #7a8592;
+  border-radius: .6rem;
+  background: #fff;
+  overflow: hidden;
+}
+.bar {
+  display: flex;
+  justify-content: space-between;
+  background: #e2e7ec;
+  border-bottom: 1px solid #7a8592;
+  padding: .5rem .8rem;
+  gap: .4rem;
+}
+.content {
+  padding: 1rem;
+}
+.role {
+  display: block;
+  margin: .35rem 0 1rem;
+}
+.field {
+  margin: .7rem 0;
+}
+.blank {
+  display: block;
+  min-height: 2.5rem;
+  border: 1px solid #7c8897;
+  border-radius: .25rem;
+  background: #fbfcfd;
+  padding: .35rem .5rem;
+}
+.blank.choice:after {
+  content: '▾';
+  float: right;
+}
+.blank.textarea {
+  min-height: 5rem;
+}
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .45rem;
+  margin: .75rem 0;
+}
+.actions span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.75rem;
+  border: 1px solid #4b6075;
+  background: #e6edf3;
+  border-radius: .25rem;
+  padding: .4rem .65rem;
+}
+.actions span:first-child {
+  background: #20364b;
+  color: #fff;
+}
+.notice {
+  border-left: .25rem solid #627488;
+  background: #eef2f6;
+  margin: .75rem 0;
+  padding: .5rem .65rem;
+}
+.notice.error {
+  border-color: #a54539;
+  background: #fff3ef;
+}
+.split, .summary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 9rem), 1fr));
+  gap: .65rem;
+}
+.split > div, .summary > div {
+  border: 1px solid #adb8c3;
+  padding: .55rem;
+}
+.summary dt {
+  font-size: .875rem;
+}
+.summary dd {
+  margin: 0;
+  font-weight: bold;
+}
+.chart {
+  display: grid;
+  min-height: 9.5rem;
+  padding: .55rem;
+  border: 1px solid #aab3bf;
+  background: repeating-linear-gradient(#f6f8fa 0 1.25rem, #e3e9ee 1.25rem 1.3rem);
+}
+.chart span:first-of-type {
+  place-self: center;
+  background: #fff;
+  padding: .1rem .35rem;
+  border: 1px dashed #667587;
+}
+.chart span:last-child {
+  place-self: end;
+}
+.listing {
+  border: 1px solid #9ba9b7;
+  margin: .55rem 0;
+}
+.row {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: .4rem;
+  padding: .4rem .55rem;
+}
+.table-head {
+  background: #e8edf2;
+}
+.mobile-label {
+  display: none;
+}
+.conversation > div {
+  padding: .5rem .7rem;
+  margin: .45rem 0;
+  border: 1px dashed #8796a7;
+}
+.conversation > div:first-child {
+  margin-left: 1rem;
+}
+.mobile .split, .mobile .summary, .mobile .row {
+  grid-template-columns: 1fr;
+}
+.mobile .table-head {
+  display: none;
+}
+.mobile .mobile-label {
+  display: inline;
+  margin-right: .4rem;
+}
+.mobile .actions > span {
+  flex: 1 1 auto;
+}
+@media (max-width: 42rem) {
+  .web .split, .web .summary, .web .row {
+    grid-template-columns: 1fr;
+  }
+  .web .table-head {
+    display: none;
+  }
+  .web .mobile-label {
+    display: inline;
+    margin-right: .4rem;
+  }
+}
+@media print {
+  main > section {
+    break-inside: avoid;
+  }
+}
+</style>
+</head>
+<body>
+<header>
+  <h1>AgroDecide · Wireframes del MVP</h1>
+  <p>Vistas de diseño para escritorio y móvil. Las muestras ilustran contenidos, acciones y estados de la interfaz.</p>
+  <nav aria-label="Índice de pantallas">
+    <ul>
+      <li><a href="#inicio">Iniciar sesión</a></li>
+      <li><a href="#registro">Crear cuenta</a></li>
+      <li><a href="#panel">Panel principal</a></li>
+      <li><a href="#perfil">Mi perfil</a></li>
+      <li><a href="#catalogo">Catálogo de sensores</a></li>
+      <li><a href="#historial">Historial de humedad</a></li>
+      <li><a href="#humedad">Pronóstico de humedad</a></li>
+      <li><a href="#eva">Consulta agrícola EVA</a></li>
+      <li><a href="#precio">Pronóstico de precio mayorista</a></li>
+      <li><a href="#asistente">Asistente agrícola</a></li>
+      <li><a href="#sensores">Gestionar sensores</a></li>
+      <li><a href="#sensor">Crear o editar sensor</a></li>
+      <li><a href="#mediciones">Gestionar mediciones</a></li>
+      <li><a href="#medicion">Crear o editar medición</a></li>
+      <li><a href="#error">Estados de acceso y servicio</a></li>
+    </ul>
+  </nav>
+</header>
+<main>
+  <section id="inicio">
+    <h2>Iniciar sesión</h2>
+    <div class="boards">
+      <figure class="variant web">
+        <figcaption>Web · referencia 864 px</figcaption>
+        <div class="frame">
+          <div class="bar"><strong>AgroDecide</strong><span>Ayuda</span></div>
+          <div class="content">
+            <h3>Iniciar sesión</h3>
+            <span class="role">Visitante</span>
+            <div class="field"><b>Correo electrónico</b><span class="blank"> </span></div>
+            <div class="field"><b>Contraseña</b><span class="blank"> </span></div>
+            <div class="actions"><span>Iniciar sesión</span><span>Crear cuenta</span></div>
+            <p class="notice error">Error · Credenciales inválidas. Revise los datos e inténtelo de nuevo.</p>
+          </div>
+        </div>
+      </figure>
+      <figure class="variant mobile">
+        <figcaption>Móvil · referencia 390 px</figcaption>
+        <div class="frame">
+          <div class="bar"><strong>AgroDecide</strong><span>Ayuda</span></div>
+          <div class="content">
+            <h3>Iniciar sesión</h3>
+            <span class="role">Visitante</span>
+            <div class="field"><b>Correo electrónico</b><span class="blank"> </span></div>
+            <div class="field"><b>Contraseña</b><span class="blank"> </span></div>
+            <div class="actions"><span>Iniciar sesión</span><span>Crear cuenta</span></div>
+            <p class="notice error">Error · Credenciales inválidas. Revise los datos e inténtelo de nuevo.</p>
+          </div>
+        </div>
+      </figure>
+    </div>
+  </section>
+  <section id="registro">
+    <h2>Crear cuenta</h2>
+    <div class="boards">
+      <figure class="variant web">
+        <figcaption>Web · referencia 864 px</figcaption>
+        <div class="frame">
+          <div class="bar"><strong>AgroDecide</strong><span>Ayuda</span></div>
+          <div class="content">
+            <h3>Crear cuenta</h3>
+            <span class="role">Visitante</span>
+            <div class="field"><b>Correo electrónico</b><span class="blank"> </span></div>
+            <div class="field"><b>Contraseña (12 a 128 caracteres)</b><span class="blank"> </span></div>
+            <div class="actions"><span>Crear cuenta</span><span>Volver al inicio de sesión</span></div>
+            <p class="notice note">Registro público para el rol Agricultor.</p>
+            <p class="notice error">Error · Corrija los campos señalados o utilice un correo diferente.</p>
+          </div>
+        </div>
+      </figure>
+      <figure class="variant mobile">
+        <figcaption>Móvil · referencia 390 px</figcaption>
+        <div class="frame">
+          <div class="bar"><strong>AgroDecide</strong><span>Ayuda</span></div>
+          <div class="content">
+            <h3>Crear cuenta</h3>
+            <span class="role">Visitante</span>
+            <div class="field"><b>Correo electrónico</b><span class="blank"> </span></div>
+            <div class="field"><b>Contraseña (12 a 128 caracteres)</b><span class="blank"> </span></div>
+            <div class="actions"><span>Crear cuenta</span><span>Volver al inicio de sesión</span></div>
+            <p class="notice note">Registro público para el rol Agricultor.</p>
+            <p class="notice error">Error · Corrija los campos señalados o utilice un correo diferente.</p>
+          </div>
+        </div>
+      </figure>
+    </div>
+  </section>
+  <section id="panel">
+    <h2>Panel principal</h2>
+    <div class="boards">
+      <figure class="variant web">
+        <figcaption>Web · referencia 864 px</figcaption>
+        <div class="frame">
+          <div class="bar"><strong>AgroDecide</strong><span>Panel · Cerrar sesión</span></div>
+          <div class="content">
+            <h3>Panel principal</h3>
+            <span class="role">Agricultor y Administrador</span>
+            <div class="split">
+              <div><b>Agricultor</b>
+                <div class="actions"><span>Catálogo de sensores</span><span>Historial</span><span>Pronóstico de humedad</span><span>Consulta agrícola EVA</span><span>Pronóstico de precio</span><span>Asistente</span><span>Mi perfil</span></div>
+              </div>
+              <div><b>Administrador</b>
+                <div class="actions"><span>Sensores</span><span>Mediciones</span></div>
+              </div>
+            </div>
+            <p class="notice note">Sesión expirada · Inicie sesión nuevamente para acceder.</p>
+          </div>
+        </div>
+      </figure>
+      <figure class="variant mobile">
+        <figcaption>Móvil · referencia 390 px</figcaption>
+        <div class="frame">
+          <div class="bar"><strong>AgroDecide</strong><span>Menú</span></div>
+          <div class="content">
+            <h3>Panel principal</h3>
+            <span class="role">Agricultor y Administrador</span>
+            <div class="split">
+              <div><b>Agricultor</b>
+                <div class="actions"><span>Catálogo de sensores</span><span>Historial</span><span>Pronóstico de humedad</span><span>Consulta agrícola EVA</span><span>Pronóstico de precio</span><span>Asistente</span><span>Mi perfil</span></div>
+              </div>
+              <div><b>Administrador</b>
+                <div class="actions"><span>Sensores</span><span>Mediciones</span></div>
+              </div>
+            </div>
+            <p class="notice note">Sesión expirada · Inicie sesión nuevamente para acceder.</p>
+          </div>
+        </div>
+      </figure>
+    </div>
+  </section>
+  <section id="perfil">
+    <h2>Mi perfil</h2>
+    <div class="boards">
+      <figure class="variant web">
+        <figcaption>Web · referencia 864 px</figcaption>
+        <div class="frame">
+          <div class="bar"><strong>AgroDecide</strong><span>Panel · Cerrar sesión</span></div>
+          <div class="content">
+            <h3>Mi perfil</h3>
+            <span class="role">Agricultor</span>
+            <dl class="summary">
+              <div>
+                <dt>Identificador</dt>
+                <dd>—</dd>
+              </div>
+              <div>
+                <dt>Correo</dt>
+                <dd>—</dd>
+              </div>
+              <div>
+                <dt>Rol</dt>
+                <dd>Agricultor</dd>
+              </div>
+            </dl>
+            <div class="actions"><span>Volver al panel</span></div>
+            <p class="notice error">Sesión expirada · Inicie sesión nuevamente para consultar el perfil.</p>
+          </div>
+        </div>
+      </figure>
+      <figure class="variant mobile">
+        <figcaption>Móvil · referencia 390 px</figcaption>
+        <div class="frame">
+          <div class="bar"><strong>AgroDecide</strong><span>Menú</span></div>
+          <div class="content">
+            <h3>Mi perfil</h3>
+            <span class="role">Agricultor</span>
+            <dl class="summary">
+              <div>
+                <dt>Identificador</dt>
+                <dd>—</dd>
+              </div>
+              <div>
+                <dt>Correo</dt>
+                <dd>—</dd>
+              </div>
+              <div>
+                <dt>Rol</dt>
+                <dd>Agricultor</dd>
+              </div>
+            </dl>
+            <div class="actions"><span>Volver al panel</span></div>
+            <p class="notice error">Sesión expirada · Inicie sesión nuevamente para consultar el perfil.</p>
+          </div>
+        </div>
+      </figure>
+    </div>
+  </section>
+  <section id="catalogo">
+    <h2>Catálogo de sensores</h2>
+    <div class="boards">
+      <figure class="variant web">
+        <figcaption>Web · referencia 864 px</figcaption>
+        <div class="frame">
+          <div class="bar"><strong>AgroDecide</strong><span>Panel · Cerrar sesión</span></div>
+          <div class="content">
+            <h3>Catálogo de sensores</h3>
+            <span class="role">Agricultor</span>
+            <div class="listing" aria-label="Lista de ejemplo">
+              <div class="row table-head"><b>Sensor</b><b>Ubicación</b><b>Profundidad</b><b>Acciones</b></div>
+              <div class="row"><span><b class="mobile-label">Sensor</b>[Nombre]</span><span><b class="mobile-label">Ubicación</b>[Ubicación]</span><span><b class="mobile-label">Profundidad</b>— cm</span><span><b class="mobile-label">Acciones</b>Ver historial</span></div>
+            </div>
+            <div class="actions"><span>Página anterior</span><span>Página siguiente</span></div>
+            <p class="notice note">Sin sensores · El administrador debe registrar un sensor para habilitar la consulta.</p>
+          </div>
+        </div>
+      </figure>
+      <figure class="variant mobile">
+        <figcaption>Móvil · referencia 390 px</figcaption>
+        <div class="frame">
+          <div class="bar"><strong>AgroDecide</strong><span>Menú</span></div>
+          <div class="content">
+            <h3>Catálogo de sensores</h3>
+            <span class="role">Agricultor</span>
+            <div class="listing" aria-label="Lista de ejemplo">
+              <div class="row table-head"><b>Sensor</b><b>Ubicación</b><b>Profundidad</b><b>Acciones</b></div>
+              <div class="row"><span><b class="mobile-label">Sensor</b>[Nombre]</span><span><b class="mobile-label">Ubicación</b>[Ubicación]</span><span><b class="mobile-label">Profundidad</b>— cm</span><span><b class="mobile-label">Acciones</b>Ver historial</span></div>
+            </div>
+            <div class="actions"><span>Página anterior</span><span>Página siguiente</span></div>
+            <p class="notice note">Sin sensores · El administrador debe registrar un sensor para habilitar la consulta.</p>
+          </div>
+        </div>
+      </figure>
+    </div>
+  </section>
+  <section id="historial">
+    <h2>Historial de humedad</h2>
+    <div class="boards">
+      <figure class="variant web">
+        <figcaption>Web · referencia 864 px</figcaption>
+        <div class="frame">
+          <div class="bar"><strong>AgroDecide</strong><span>Panel · Cerrar sesión</span></div>
+          <div class="content">
+            <h3>Historial de humedad</h3>
+            <span class="role">Agricultor</span>
+            <div class="field"><b>Sensor</b><span class="blank choice">Seleccione un sensor</span></div>
+            <div class="field"><b>Desde</b><span class="blank"> </span></div>
+            <div class="field"><b>Hasta</b><span class="blank"> </span></div>
+            <div class="actions"><span>Consultar</span></div>
+            <dl class="summary">
+              <div>
+                <dt>Ubicación</dt>
+                <dd>—</dd>
+              </div>
+              <div>
+                <dt>Profundidad</dt>
+                <dd>— cm</dd>
+              </div>
+              <div>
+                <dt>Unidad</dt>
+                <dd>% volumétrico</dd>
+              </div>
+              <div>
+                <dt>Zona horaria</dt>
+                <dd>America/Bogota</dd>
+              </div>
+            </dl>
+            <div class="chart" role="img" aria-label="Humedad (%). Área reservada para el gráfico">Humedad (%)<span>Área del gráfico</span><span>Tiempo →</span></div>
+            <p class="notice note">Sin mediciones en el intervalo. Cambie las fechas o seleccione otro sensor.</p>
+          </div>
+        </div>
+      </figure>
+      <figure class="variant mobile">
+        <figcaption>Móvil · referencia 390 px</figcaption>
+        <div class="frame">
+          <div class="bar"><strong>AgroDecide</strong><span>Menú</span></div>
+          <div class="content">
+            <h3>Historial de humedad</h3>
+            <span class="role">Agricultor</span>
+            <div class="field"><b>Sensor</b><span class="blank choice">Seleccione un sensor</span></div>
+            <div class="field"><b>Desde</b><span class="blank"> </span></div>
+            <div class="field"><b>Hasta</b><span class="blank"> </span></div>
+            <div class="actions"><span>Consultar</span></div>
+            <dl class="summary">
+              <div>
+                <dt>Ubicación</dt>
+                <dd>—</dd>
+              </div>
+              <div>
+                <dt>Profundidad</dt>
+                <dd>— cm</dd>
+              </div>
+              <div>
+                <dt>Unidad</dt>
+                <dd>% volumétrico</dd>
+              </div>
+              <div>
+                <dt>Zona horaria</dt>
+                <dd>America/Bogota</dd>
+              </div>
+            </dl>
+            <div class="chart" role="img" aria-label="Humedad (%). Área reservada para el gráfico">Humedad (%)<span>Área del gráfico</span><span>Tiempo →</span></div>
+            <p class="notice note">Sin mediciones en el intervalo. Cambie las fechas o seleccione otro sensor.</p>
+          </div>
+        </div>
+      </figure>
+    </div>
+  </section>
+  <section id="humedad">
+    <h2>Pronóstico de humedad</h2>
+    <div class="boards">
+      <figure class="variant web">
+        <figcaption>Web · referencia 864 px</figcaption>
+        <div class="frame">
+          <div class="bar"><strong>AgroDecide</strong><span>Panel · Cerrar sesión</span></div>
+          <div class="content">
+            <h3>Pronóstico de humedad</h3>
+            <span class="role">Agricultor</span>
+            <div class="field"><b>Sensor</b><span class="blank choice">Seleccione un sensor</span></div>
+            <div class="actions"><span>Consultar pronóstico</span></div>
+            <dl class="summary">
+              <div>
+                <dt>Última medición</dt>
+                <dd>—</dd>
+              </div>
+              <div>
+                <dt>Hora de predicción (t)</dt>
+                <dd>—</dd>
+              </div>
+              <div>
+                <dt>Pronóstico a t + 24 h</dt>
+                <dd>— %</dd>
+              </div>
+              <div>
+                <dt>Versión del modelo</dt>
+                <dd>—</dd>
+              </div>
+              <div>
+                <dt>Procedencia</dt>
+                <dd>—</dd>
+              </div>
+            </dl>
+            <div class="chart" role="img" aria-label="Ventana histórica de 24 h. Área reservada para el gráfico">Ventana histórica de 24 h<span>Área del gráfico</span><span>Tiempo →</span></div>
+            <p class="notice error">Historial insuficiente · Verifique la cobertura del sensor durante la ventana requerida.</p>
+          </div>
+        </div>
+      </figure>
+      <figure class="variant mobile">
+        <figcaption>Móvil · referencia 390 px</figcaption>
+        <div class="frame">
+          <div class="bar"><strong>AgroDecide</strong><span>Menú</span></div>
+          <div class="content">
+            <h3>Pronóstico de humedad</h3>
+            <span class="role">Agricultor</span>
+            <div class="field"><b>Sensor</b><span class="blank choice">Seleccione un sensor</span></div>
+            <div class="actions"><span>Consultar pronóstico</span></div>
+            <dl class="summary">
+              <div>
+                <dt>Última medición</dt>
+                <dd>—</dd>
+              </div>
+              <div>
+                <dt>Hora de predicción (t)</dt>
+                <dd>—</dd>
+              </div>
+              <div>
+                <dt>Pronóstico a t + 24 h</dt>
+                <dd>— %</dd>
+              </div>
+              <div>
+                <dt>Versión del modelo</dt>
+                <dd>—</dd>
+              </div>
+              <div>
+                <dt>Procedencia</dt>
+                <dd>—</dd>
+              </div>
+            </dl>
+            <div class="chart" role="img" aria-label="Ventana histórica de 24 h. Área reservada para el gráfico">Ventana histórica de 24 h<span>Área del gráfico</span><span>Tiempo →</span></div>
+            <p class="notice error">Historial insuficiente · Verifique la cobertura del sensor durante la ventana requerida.</p>
+          </div>
+        </div>
+      </figure>
+    </div>
+  </section>
+  <section id="eva">
+    <h2>Consulta agrícola EVA</h2>
+    <div class="boards">
+      <figure class="variant web">
+        <figcaption>Web · referencia 864 px</figcaption>
+        <div class="frame">
+          <div class="bar"><strong>AgroDecide</strong><span>Panel · Cerrar sesión</span></div>
+          <div class="content">
+            <h3>Consulta agrícola EVA</h3>
+            <span class="role">Agricultor</span>
+            <div class="field"><b>Municipio</b><span class="blank choice">Seleccione un municipio</span></div>
+            <div class="field"><b>Cultivo</b><span class="blank choice">Seleccione un cultivo</span></div>
+            <div class="field"><b>Período</b><span class="blank choice">Seleccione un año</span></div>
+            <div class="actions"><span>Consultar</span></div>
+            <div class="listing" aria-label="Lista de ejemplo">
+              <div class="row table-head"><b>Cultivo</b><b>Período</b><b>Área</b><b>Producción</b></div>
+              <div class="row"><span><b class="mobile-label">Cultivo</b>—</span><span><b class="mobile-label">Período</b>—</span><span><b class="mobile-label">Área</b>— ha</span><span><b class="mobile-label">Producción</b>— t</span></div>
+            </div>
+            <p class="notice note">Fuente · Evaluaciones Agropecuarias Municipales (EVA).</p>
+            <p class="notice note">Sin registros para los filtros seleccionados.</p>
+          </div>
+        </div>
+      </figure>
+      <figure class="variant mobile">
+        <figcaption>Móvil · referencia 390 px</figcaption>
+        <div class="frame">
+          <div class="bar"><strong>AgroDecide</strong><span>Menú</span></div>
+          <div class="content">
+            <h3>Consulta agrícola EVA</h3>
+            <span class="role">Agricultor</span>
+            <div class="field"><b>Municipio</b><span class="blank choice">Seleccione un municipio</span></div>
+            <div class="field"><b>Cultivo</b><span class="blank choice">Seleccione un cultivo</span></div>
+            <div class="field"><b>Período</b><span class="blank choice">Seleccione un año</span></div>
+            <div class="actions"><span>Consultar</span></div>
+            <div class="listing" aria-label="Lista de ejemplo">
+              <div class="row table-head"><b>Cultivo</b><b>Período</b><b>Área</b><b>Producción</b></div>
+              <div class="row"><span><b class="mobile-label">Cultivo</b>—</span><span><b class="mobile-label">Período</b>—</span><span><b class="mobile-label">Área</b>— ha</span><span><b class="mobile-label">Producción</b>— t</span></div>
+            </div>
+            <p class="notice note">Fuente · Evaluaciones Agropecuarias Municipales (EVA).</p>
+            <p class="notice note">Sin registros para los filtros seleccionados.</p>
+          </div>
+        </div>
+      </figure>
+    </div>
+  </section>
+  <section id="precio">
+    <h2>Pronóstico de precio mayorista</h2>
+    <div class="boards">
+      <figure class="variant web">
+        <figcaption>Web · referencia 864 px</figcaption>
+        <div class="frame">
+          <div class="bar"><strong>AgroDecide</strong><span>Panel · Cerrar sesión</span></div>
+          <div class="content">
+            <h3>Pronóstico de precio mayorista</h3>
+            <span class="role">Agricultor</span>
+            <div class="field"><b>Mercado</b><span class="blank choice">Seleccione un mercado disponible</span></div>
+            <div class="field"><b>Variedad</b><span class="blank choice">Seleccione una variedad disponible</span></div>
+            <div class="actions"><span>Consultar pronóstico</span></div>
+            <dl class="summary">
+              <div>
+                <dt>Última observación</dt>
+                <dd>—</dd>
+              </div>
+              <div>
+                <dt>Corte de datos</dt>
+                <dd>—</dd>
+              </div>
+              <div>
+                <dt>Frecuencia observada</dt>
+                <dd>—</dd>
+              </div>
+              <div>
+                <dt>Siguiente período según SIPSA</dt>
+                <dd>—</dd>
+              </div>
+              <div>
+                <dt>Valor estimado y unidad de origen</dt>
+                <dd>—</dd>
+              </div>
+              <div>
+                <dt>Versión del modelo</dt>
+                <dd>—</dd>
+              </div>
+            </dl>
+            <div class="chart" role="img" aria-label="Historial de precios SIPSA. Área reservada para el gráfico">Historial de precios SIPSA<span>Área del gráfico</span><span>Tiempo →</span></div>
+            <p class="notice error">Serie no disponible · Seleccione una combinación de mercado y variedad con datos.</p>
+          </div>
+        </div>
+      </figure>
+      <figure class="variant mobile">
+        <figcaption>Móvil · referencia 390 px</figcaption>
+        <div class="frame">
+          <div class="bar"><strong>AgroDecide</strong><span>Menú</span></div>
+          <div class="content">
+            <h3>Pronóstico de precio mayorista</h3>
+            <span class="role">Agricultor</span>
+            <div class="field"><b>Mercado</b><span class="blank choice">Seleccione un mercado disponible</span></div>
+            <div class="field"><b>Variedad</b><span class="blank choice">Seleccione una variedad disponible</span></div>
+            <div class="actions"><span>Consultar pronóstico</span></div>
+            <dl class="summary">
+              <div>
+                <dt>Última observación</dt>
+                <dd>—</dd>
+              </div>
+              <div>
+                <dt>Corte de datos</dt>
+                <dd>—</dd>
+              </div>
+              <div>
+                <dt>Frecuencia observada</dt>
+                <dd>—</dd>
+              </div>
+              <div>
+                <dt>Siguiente período según SIPSA</dt>
+                <dd>—</dd>
+              </div>
+              <div>
+                <dt>Valor estimado y unidad de origen</dt>
+                <dd>—</dd>
+              </div>
+              <div>
+                <dt>Versión del modelo</dt>
+                <dd>—</dd>
+              </div>
+            </dl>
+            <div class="chart" role="img" aria-label="Historial de precios SIPSA. Área reservada para el gráfico">Historial de precios SIPSA<span>Área del gráfico</span><span>Tiempo →</span></div>
+            <p class="notice error">Serie no disponible · Seleccione una combinación de mercado y variedad con datos.</p>
+          </div>
+        </div>
+      </figure>
+    </div>
+  </section>
+  <section id="asistente">
+    <h2>Asistente agrícola</h2>
+    <div class="boards">
+      <figure class="variant web">
+        <figcaption>Web · referencia 864 px</figcaption>
+        <div class="frame">
+          <div class="bar"><strong>AgroDecide</strong><span>Panel · Cerrar sesión</span></div>
+          <div class="content">
+            <h3>Asistente agrícola</h3>
+            <span class="role">Agricultor</span>
+            <div class="conversation">
+              <div>Tu pregunta</div>
+              <div>Respuesta acompañada de la fuente y del período consultado</div>
+            </div>
+            <div class="field"><b>Pregunta en español</b><span class="blank textarea">Escribe una pregunta sobre tus consultas agrícolas.</span></div>
+            <div class="actions"><span>Enviar</span></div>
+            <p class="notice note">Información insuficiente · Ajuste la pregunta o consulte los datos disponibles.</p>
+            <p class="notice error">Servicio local no disponible · Intente nuevamente.</p>
+          </div>
+        </div>
+      </figure>
+      <figure class="variant mobile">
+        <figcaption>Móvil · referencia 390 px</figcaption>
+        <div class="frame">
+          <div class="bar"><strong>AgroDecide</strong><span>Menú</span></div>
+          <div class="content">
+            <h3>Asistente agrícola</h3>
+            <span class="role">Agricultor</span>
+            <div class="conversation">
+              <div>Tu pregunta</div>
+              <div>Respuesta acompañada de la fuente y del período consultado</div>
+            </div>
+            <div class="field"><b>Pregunta en español</b><span class="blank textarea">Escribe una pregunta sobre tus consultas agrícolas.</span></div>
+            <div class="actions"><span>Enviar</span></div>
+            <p class="notice note">Información insuficiente · Ajuste la pregunta o consulte los datos disponibles.</p>
+            <p class="notice error">Servicio local no disponible · Intente nuevamente.</p>
+          </div>
+        </div>
+      </figure>
+    </div>
+  </section>
+  <section id="sensores">
+    <h2>Gestionar sensores</h2>
+    <div class="boards">
+      <figure class="variant web">
+        <figcaption>Web · referencia 864 px</figcaption>
+        <div class="frame">
+          <div class="bar"><strong>AgroDecide</strong><span>Panel · Cerrar sesión</span></div>
+          <div class="content">
+            <h3>Gestionar sensores</h3>
+            <span class="role">Administrador</span>
+            <div class="actions"><span>Nuevo sensor</span></div>
+            <div class="listing" aria-label="Lista de ejemplo">
+              <div class="row table-head"><b>Sensor</b><b>Ubicación</b><b>Profundidad</b><b>Acciones</b></div>
+              <div class="row"><span><b class="mobile-label">Sensor</b>[Nombre]</span><span><b class="mobile-label">Ubicación</b>[Ubicación]</span><span><b class="mobile-label">Profundidad</b>— cm</span><span><b class="mobile-label">Acciones</b>Ver · Editar · Eliminar</span></div>
+            </div>
+            <p class="notice error">Confirme la eliminación. Si el sensor conserva mediciones, revise primero su historial.</p>
+          </div>
+        </div>
+      </figure>
+      <figure class="variant mobile">
+        <figcaption>Móvil · referencia 390 px</figcaption>
+        <div class="frame">
+          <div class="bar"><strong>AgroDecide</strong><span>Menú</span></div>
+          <div class="content">
+            <h3>Gestionar sensores</h3>
+            <span class="role">Administrador</span>
+            <div class="actions"><span>Nuevo sensor</span></div>
+            <div class="listing" aria-label="Lista de ejemplo">
+              <div class="row table-head"><b>Sensor</b><b>Ubicación</b><b>Profundidad</b><b>Acciones</b></div>
+              <div class="row"><span><b class="mobile-label">Sensor</b>[Nombre]</span><span><b class="mobile-label">Ubicación</b>[Ubicación]</span><span><b class="mobile-label">Profundidad</b>— cm</span><span><b class="mobile-label">Acciones</b>Ver · Editar · Eliminar</span></div>
+            </div>
+            <p class="notice error">Confirme la eliminación. Si el sensor conserva mediciones, revise primero su historial.</p>
+          </div>
+        </div>
+      </figure>
+    </div>
+  </section>
+  <section id="sensor">
+    <h2>Crear o editar sensor</h2>
+    <div class="boards">
+      <figure class="variant web">
+        <figcaption>Web · referencia 864 px</figcaption>
+        <div class="frame">
+          <div class="bar"><strong>AgroDecide</strong><span>Panel · Cerrar sesión</span></div>
+          <div class="content">
+            <h3>Crear o editar sensor</h3>
+            <span class="role">Administrador</span>
+            <div class="field"><b>Nombre</b><span class="blank"> </span></div>
+            <div class="field"><b>Ubicación</b><span class="blank"> </span></div>
+            <div class="field"><b>Profundidad (0,1 a 1.000 cm)</b><span class="blank"> </span></div>
+            <div class="actions"><span>Guardar sensor</span><span>Cancelar</span></div>
+            <p class="notice error">Error · Complete los campos requeridos y revise la profundidad.</p>
+          </div>
+        </div>
+      </figure>
+      <figure class="variant mobile">
+        <figcaption>Móvil · referencia 390 px</figcaption>
+        <div class="frame">
+          <div class="bar"><strong>AgroDecide</strong><span>Menú</span></div>
+          <div class="content">
+            <h3>Crear o editar sensor</h3>
+            <span class="role">Administrador</span>
+            <div class="field"><b>Nombre</b><span class="blank"> </span></div>
+            <div class="field"><b>Ubicación</b><span class="blank"> </span></div>
+            <div class="field"><b>Profundidad (0,1 a 1.000 cm)</b><span class="blank"> </span></div>
+            <div class="actions"><span>Guardar sensor</span><span>Cancelar</span></div>
+            <p class="notice error">Error · Complete los campos requeridos y revise la profundidad.</p>
+          </div>
+        </div>
+      </figure>
+    </div>
+  </section>
+  <section id="mediciones">
+    <h2>Gestionar mediciones</h2>
+    <div class="boards">
+      <figure class="variant web">
+        <figcaption>Web · referencia 864 px</figcaption>
+        <div class="frame">
+          <div class="bar"><strong>AgroDecide</strong><span>Panel · Cerrar sesión</span></div>
+          <div class="content">
+            <h3>Gestionar mediciones</h3>
+            <span class="role">Administrador</span>
+            <div class="field"><b>Sensor</b><span class="blank choice">Seleccione un sensor</span></div>
+            <div class="actions"><span>Filtrar</span><span>Nueva medición</span></div>
+            <div class="listing" aria-label="Lista de ejemplo">
+              <div class="row table-head"><b>Sensor</b><b>Instante</b><b>Humedad</b><b>Acciones</b></div>
+              <div class="row"><span><b class="mobile-label">Sensor</b>[Nombre]</span><span><b class="mobile-label">Instante</b>[Fecha y hora]</span><span><b class="mobile-label">Humedad</b>— %</span><span><b class="mobile-label">Acciones</b>Ver · Editar · Eliminar</span></div>
+            </div>
+            <p class="notice note">Sin mediciones para este filtro. Confirme antes de eliminar una medición.</p>
+          </div>
+        </div>
+      </figure>
+      <figure class="variant mobile">
+        <figcaption>Móvil · referencia 390 px</figcaption>
+        <div class="frame">
+          <div class="bar"><strong>AgroDecide</strong><span>Menú</span></div>
+          <div class="content">
+            <h3>Gestionar mediciones</h3>
+            <span class="role">Administrador</span>
+            <div class="field"><b>Sensor</b><span class="blank choice">Seleccione un sensor</span></div>
+            <div class="actions"><span>Filtrar</span><span>Nueva medición</span></div>
+            <div class="listing" aria-label="Lista de ejemplo">
+              <div class="row table-head"><b>Sensor</b><b>Instante</b><b>Humedad</b><b>Acciones</b></div>
+              <div class="row"><span><b class="mobile-label">Sensor</b>[Nombre]</span><span><b class="mobile-label">Instante</b>[Fecha y hora]</span><span><b class="mobile-label">Humedad</b>— %</span><span><b class="mobile-label">Acciones</b>Ver · Editar · Eliminar</span></div>
+            </div>
+            <p class="notice note">Sin mediciones para este filtro. Confirme antes de eliminar una medición.</p>
+          </div>
+        </div>
+      </figure>
+    </div>
+  </section>
+  <section id="medicion">
+    <h2>Crear o editar medición</h2>
+    <div class="boards">
+      <figure class="variant web">
+        <figcaption>Web · referencia 864 px</figcaption>
+        <div class="frame">
+          <div class="bar"><strong>AgroDecide</strong><span>Panel · Cerrar sesión</span></div>
+          <div class="content">
+            <h3>Crear o editar medición</h3>
+            <span class="role">Administrador</span>
+            <div class="field"><b>Sensor</b><span class="blank choice">Seleccione un sensor</span></div>
+            <div class="field"><b>Fecha, hora y zona horaria</b><span class="blank"> </span></div>
+            <div class="field"><b>Humedad volumétrica (%)</b><span class="blank"> </span></div>
+            <div class="actions"><span>Guardar medición</span><span>Cancelar</span></div>
+            <p class="notice error">Error · Verifique el sensor, el instante de captura y que la humedad esté entre 0 y 100.</p>
+          </div>
+        </div>
+      </figure>
+      <figure class="variant mobile">
+        <figcaption>Móvil · referencia 390 px</figcaption>
+        <div class="frame">
+          <div class="bar"><strong>AgroDecide</strong><span>Menú</span></div>
+          <div class="content">
+            <h3>Crear o editar medición</h3>
+            <span class="role">Administrador</span>
+            <div class="field"><b>Sensor</b><span class="blank choice">Seleccione un sensor</span></div>
+            <div class="field"><b>Fecha, hora y zona horaria</b><span class="blank"> </span></div>
+            <div class="field"><b>Humedad volumétrica (%)</b><span class="blank"> </span></div>
+            <div class="actions"><span>Guardar medición</span><span>Cancelar</span></div>
+            <p class="notice error">Error · Verifique el sensor, el instante de captura y que la humedad esté entre 0 y 100.</p>
+          </div>
+        </div>
+      </figure>
+    </div>
+  </section>
+  <section id="error">
+    <h2>Estados de acceso y servicio</h2>
+    <div class="boards">
+      <figure class="variant web">
+        <figcaption>Web · referencia 864 px</figcaption>
+        <div class="frame">
+          <div class="bar"><strong>AgroDecide</strong><span>Panel · Cerrar sesión</span></div>
+          <div class="content">
+            <h3>Estados de acceso y servicio</h3>
+            <span class="role">Visitante y usuarios autenticados</span>
+            <p class="notice error">401 · Inicie sesión para continuar.</p>
+            <div class="actions"><span>Iniciar sesión</span></div>
+            <p class="notice error">403 · Su rol no tiene acceso a esta vista.</p>
+            <div class="actions"><span>Volver al panel</span></div>
+            <p class="notice error">Error de comunicación · No se pudo cargar la consulta.</p>
+            <div class="actions"><span>Reintentar</span></div>
+          </div>
+        </div>
+      </figure>
+      <figure class="variant mobile">
+        <figcaption>Móvil · referencia 390 px</figcaption>
+        <div class="frame">
+          <div class="bar"><strong>AgroDecide</strong><span>Menú</span></div>
+          <div class="content">
+            <h3>Estados de acceso y servicio</h3>
+            <span class="role">Visitante y usuarios autenticados</span>
+            <p class="notice error">401 · Inicie sesión para continuar.</p>
+            <div class="actions"><span>Iniciar sesión</span></div>
+            <p class="notice error">403 · Su rol no tiene acceso a esta vista.</p>
+            <div class="actions"><span>Volver al panel</span></div>
+            <p class="notice error">Error de comunicación · No se pudo cargar la consulta.</p>
+            <div class="actions"><span>Reintentar</span></div>
+          </div>
+        </div>
+      </figure>
+    </div>
+  </section>
+</main>
+</body>
+</html>

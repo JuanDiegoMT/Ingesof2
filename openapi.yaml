@@ -1,0 +1,798 @@
+openapi: 3.0.3
+info:
+  title: API local de AgroDecide
+  version: 1.0.0
+  description: Contrato de identidad, sensores y mediciones del Prototipo 1.
+servers:
+- url: http://127.0.0.1:8000/api/v1
+  description: Desarrollo local
+security:
+- bearerAuth: []
+paths:
+  /auth/registro:
+    post:
+      tags:
+      - Identidad
+      operationId: registrar
+      summary: Registrar una cuenta agricultora
+      responses:
+        '201':
+          description: Cuenta registrada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Usuario'
+              example:
+                id: 1
+                correo: agricultor@example.invalid
+                rol: agricultor
+        '400':
+          $ref: '#/components/responses/EntradaInvalida'
+        '409':
+          $ref: '#/components/responses/CorreoDuplicado'
+        '500':
+          $ref: '#/components/responses/ErrorInterno'
+      description: El registro público asigna el rol agricultor.
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Credenciales'
+            example:
+              correo: agricultor@example.invalid
+              contrasena: valor-solo-de-ejemplo
+  /auth/login:
+    post:
+      tags:
+      - Identidad
+      operationId: iniciarSesion
+      summary: Obtener un token de acceso
+      responses:
+        '200':
+          description: Token emitido
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Token'
+              example:
+                access_token: token-ilustrativo
+                token_type: Bearer
+                expires_in: 900
+        '400':
+          $ref: '#/components/responses/EntradaInvalida'
+        '401':
+          $ref: '#/components/responses/CredencialesInvalidas'
+        '500':
+          $ref: '#/components/responses/ErrorInterno'
+      description: Un correo o contraseña incorrectos producen 401.
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Credenciales'
+            example:
+              correo: agricultor@example.invalid
+              contrasena: valor-solo-de-ejemplo
+  /mi-perfil:
+    get:
+      tags:
+      - Identidad
+      operationId: miPerfil
+      summary: Consultar el perfil propio
+      responses:
+        '200':
+          description: Perfil actual
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Usuario'
+              example:
+                id: 1
+                correo: agricultor@example.invalid
+                rol: agricultor
+        '401':
+          $ref: '#/components/responses/TokenInvalido'
+        '403':
+          $ref: '#/components/responses/PermisoInsuficiente'
+        '500':
+          $ref: '#/components/responses/ErrorInterno'
+      description: Operación exclusiva del rol agricultor.
+  /sensores:
+    get:
+      tags:
+      - sensores
+      operationId: listarSensor
+      summary: Listar sensores
+      responses:
+        '200':
+          description: Colección paginada
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Sensor'
+              example:
+              - id: 1
+                nombre: Sonda demostración
+                ubicacion: Parcela de ejemplo
+                profundidad_cm: 15.0
+        '400':
+          $ref: '#/components/responses/EntradaInvalida'
+        '401':
+          $ref: '#/components/responses/TokenInvalido'
+        '500':
+          $ref: '#/components/responses/ErrorInterno'
+      description: Lectura autenticada para agricultor y administrador.
+      parameters:
+      - name: limite
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 200
+          default: 50
+        description: Máximo de resultados.
+      - name: desplazamiento
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 0
+          maximum: 9223372036854775807
+          default: 0
+        description: Número de filas que se omiten.
+    post:
+      tags:
+      - sensores
+      operationId: crearSensor
+      summary: Crear sensor
+      responses:
+        '201':
+          description: Recurso creado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Sensor'
+              example:
+                id: 1
+                nombre: Sonda demostración
+                ubicacion: Parcela de ejemplo
+                profundidad_cm: 15.0
+          headers:
+            Location:
+              description: Ruta del nuevo recurso.
+              schema:
+                type: string
+        '400':
+          $ref: '#/components/responses/EntradaInvalida'
+        '401':
+          $ref: '#/components/responses/TokenInvalido'
+        '403':
+          $ref: '#/components/responses/PermisoInsuficiente'
+        '500':
+          $ref: '#/components/responses/ErrorInterno'
+      description: Escritura exclusiva del rol administrador. El sensor registra ubicación y profundidad. El borrado
+        devuelve 409 si conserva mediciones.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SensorEntrada'
+            example:
+              nombre: Sonda demostración
+              ubicacion: Parcela de ejemplo
+              profundidad_cm: 15.0
+  /sensores/{id}:
+    parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 9223372036854775807
+        format: int64
+      description: Identificador del recurso.
+    get:
+      tags:
+      - sensores
+      operationId: obtenerSensor
+      summary: Obtener sensor
+      responses:
+        '200':
+          description: Recurso consultado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Sensor'
+              example:
+                id: 1
+                nombre: Sonda demostración
+                ubicacion: Parcela de ejemplo
+                profundidad_cm: 15.0
+        '400':
+          $ref: '#/components/responses/EntradaInvalida'
+        '401':
+          $ref: '#/components/responses/TokenInvalido'
+        '404':
+          $ref: '#/components/responses/RecursoInexistente'
+        '500':
+          $ref: '#/components/responses/ErrorInterno'
+      description: Lectura autenticada para agricultor y administrador.
+    put:
+      tags:
+      - sensores
+      operationId: actualizarSensor
+      summary: Reemplazar sensor
+      responses:
+        '200':
+          description: Recurso actualizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Sensor'
+              example:
+                id: 1
+                nombre: Sonda demostración
+                ubicacion: Parcela de ejemplo
+                profundidad_cm: 15.0
+        '400':
+          $ref: '#/components/responses/EntradaInvalida'
+        '401':
+          $ref: '#/components/responses/TokenInvalido'
+        '403':
+          $ref: '#/components/responses/PermisoInsuficiente'
+        '404':
+          $ref: '#/components/responses/RecursoInexistente'
+        '500':
+          $ref: '#/components/responses/ErrorInterno'
+      description: Escritura exclusiva del rol administrador. El sensor registra ubicación y profundidad. El borrado
+        devuelve 409 si conserva mediciones.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SensorEntrada'
+            example:
+              nombre: Sonda demostración
+              ubicacion: Parcela de ejemplo
+              profundidad_cm: 15.0
+    delete:
+      tags:
+      - sensores
+      operationId: eliminarSensor
+      summary: Eliminar sensor
+      responses:
+        '204':
+          description: Recurso eliminado
+        '400':
+          $ref: '#/components/responses/EntradaInvalida'
+        '401':
+          $ref: '#/components/responses/TokenInvalido'
+        '403':
+          $ref: '#/components/responses/PermisoInsuficiente'
+        '404':
+          $ref: '#/components/responses/RecursoInexistente'
+        '409':
+          $ref: '#/components/responses/SensorConMediciones'
+        '500':
+          $ref: '#/components/responses/ErrorInterno'
+      description: Escritura exclusiva del rol administrador. El sensor registra ubicación y profundidad. El borrado
+        devuelve 409 si conserva mediciones.
+  /mediciones:
+    get:
+      tags:
+      - mediciones
+      operationId: listarMedicion
+      summary: Listar mediciones
+      responses:
+        '200':
+          description: Colección paginada
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Medicion'
+              example:
+              - id: 1
+                sensor_id: 1
+                instante: '2026-11-10T13:00:00.000000Z'
+                humedad_pct: 32.5
+        '400':
+          $ref: '#/components/responses/EntradaInvalida'
+        '401':
+          $ref: '#/components/responses/TokenInvalido'
+        '500':
+          $ref: '#/components/responses/ErrorInterno'
+      description: Lectura autenticada para agricultor y administrador.
+      parameters:
+      - name: limite
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 200
+          default: 50
+        description: Máximo de resultados.
+      - name: desplazamiento
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 0
+          maximum: 9223372036854775807
+          default: 0
+        description: Número de filas que se omiten.
+      - name: sensor_id
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 9223372036854775807
+          format: int64
+        description: Filtrar mediciones por identificador de sensor.
+    post:
+      tags:
+      - mediciones
+      operationId: crearMedicion
+      summary: Crear medición
+      responses:
+        '201':
+          description: Recurso creado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Medicion'
+              example:
+                id: 1
+                sensor_id: 1
+                instante: '2026-11-10T13:00:00.000000Z'
+                humedad_pct: 32.5
+          headers:
+            Location:
+              description: Ruta del nuevo recurso.
+              schema:
+                type: string
+        '400':
+          $ref: '#/components/responses/EntradaInvalida'
+        '401':
+          $ref: '#/components/responses/TokenInvalido'
+        '403':
+          $ref: '#/components/responses/PermisoInsuficiente'
+        '404':
+          $ref: '#/components/responses/SensorInexistente'
+        '409':
+          $ref: '#/components/responses/InstanteDuplicado'
+        '500':
+          $ref: '#/components/responses/ErrorInterno'
+      description: Escritura exclusiva del rol administrador. El sensor referenciado debe existir. Se admite una
+        medición por sensor e instante UTC.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MedicionEntrada'
+            example:
+              sensor_id: 1
+              instante: '2026-11-10T13:00:00.000000Z'
+              humedad_pct: 32.5
+  /mediciones/{id}:
+    parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 9223372036854775807
+        format: int64
+      description: Identificador del recurso.
+    get:
+      tags:
+      - mediciones
+      operationId: obtenerMedicion
+      summary: Obtener medición
+      responses:
+        '200':
+          description: Recurso consultado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Medicion'
+              example:
+                id: 1
+                sensor_id: 1
+                instante: '2026-11-10T13:00:00.000000Z'
+                humedad_pct: 32.5
+        '400':
+          $ref: '#/components/responses/EntradaInvalida'
+        '401':
+          $ref: '#/components/responses/TokenInvalido'
+        '404':
+          $ref: '#/components/responses/RecursoInexistente'
+        '500':
+          $ref: '#/components/responses/ErrorInterno'
+      description: Lectura autenticada para agricultor y administrador.
+    put:
+      tags:
+      - mediciones
+      operationId: actualizarMedicion
+      summary: Reemplazar medición
+      responses:
+        '200':
+          description: Recurso actualizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Medicion'
+              example:
+                id: 1
+                sensor_id: 1
+                instante: '2026-11-10T13:00:00.000000Z'
+                humedad_pct: 32.5
+        '400':
+          $ref: '#/components/responses/EntradaInvalida'
+        '401':
+          $ref: '#/components/responses/TokenInvalido'
+        '403':
+          $ref: '#/components/responses/PermisoInsuficiente'
+        '404':
+          $ref: '#/components/responses/MedicionOSensorInexistente'
+        '409':
+          $ref: '#/components/responses/InstanteDuplicado'
+        '500':
+          $ref: '#/components/responses/ErrorInterno'
+      description: Escritura exclusiva del rol administrador. El sensor referenciado debe existir. Se admite una
+        medición por sensor e instante UTC.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MedicionEntrada'
+            example:
+              sensor_id: 1
+              instante: '2026-11-10T13:00:00.000000Z'
+              humedad_pct: 32.5
+    delete:
+      tags:
+      - mediciones
+      operationId: eliminarMedicion
+      summary: Eliminar medición
+      responses:
+        '204':
+          description: Recurso eliminado
+        '400':
+          $ref: '#/components/responses/EntradaInvalida'
+        '401':
+          $ref: '#/components/responses/TokenInvalido'
+        '403':
+          $ref: '#/components/responses/PermisoInsuficiente'
+        '404':
+          $ref: '#/components/responses/RecursoInexistente'
+        '500':
+          $ref: '#/components/responses/ErrorInterno'
+      description: Escritura exclusiva del rol administrador. El sensor referenciado debe existir. Se admite una
+        medición por sensor e instante UTC.
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    Credenciales:
+      type: object
+      required:
+      - correo
+      - contrasena
+      additionalProperties: false
+      properties:
+        correo:
+          type: string
+          format: email
+          maxLength: 254
+        contrasena:
+          type: string
+          format: password
+          minLength: 12
+          maxLength: 128
+    Usuario:
+      type: object
+      required:
+      - id
+      - correo
+      - rol
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          minimum: 1
+          maximum: 9223372036854775807
+          format: int64
+        correo:
+          type: string
+          format: email
+          maxLength: 254
+        rol:
+          type: string
+          enum:
+          - agricultor
+          - administrador
+    Token:
+      type: object
+      required:
+      - access_token
+      - token_type
+      - expires_in
+      additionalProperties: false
+      properties:
+        access_token:
+          type: string
+        token_type:
+          type: string
+          enum:
+          - Bearer
+        expires_in:
+          type: integer
+          enum:
+          - 900
+    Error:
+      type: object
+      required:
+      - error
+      additionalProperties: false
+      properties:
+        error:
+          type: object
+          required:
+          - codigo
+          - mensaje
+          additionalProperties: false
+          properties:
+            codigo:
+              type: string
+            mensaje:
+              type: string
+    SensorEntrada:
+      type: object
+      required:
+      - nombre
+      - ubicacion
+      - profundidad_cm
+      additionalProperties: false
+      properties:
+        nombre:
+          type: string
+          minLength: 1
+          maxLength: 80
+        ubicacion:
+          type: string
+          minLength: 1
+          maxLength: 120
+        profundidad_cm:
+          type: number
+          minimum: 0.1
+          maximum: 1000
+          description: Profundidad en centímetros.
+    Sensor:
+      type: object
+      required:
+      - id
+      - nombre
+      - ubicacion
+      - profundidad_cm
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          minimum: 1
+          maximum: 9223372036854775807
+          format: int64
+        nombre:
+          type: string
+          minLength: 1
+          maxLength: 80
+        ubicacion:
+          type: string
+          minLength: 1
+          maxLength: 120
+        profundidad_cm:
+          type: number
+          minimum: 0.1
+          maximum: 1000
+          description: Profundidad en centímetros.
+    MedicionEntrada:
+      type: object
+      required:
+      - sensor_id
+      - instante
+      - humedad_pct
+      additionalProperties: false
+      properties:
+        sensor_id:
+          type: integer
+          minimum: 1
+          maximum: 9223372036854775807
+          format: int64
+        instante:
+          type: string
+          format: date-time
+          description: RFC 3339 con zona explícita y hasta seis decimales. La respuesta usa UTC.
+        humedad_pct:
+          type: number
+          minimum: 0
+          maximum: 100
+          description: Humedad volumétrica en porcentaje.
+    Medicion:
+      type: object
+      required:
+      - id
+      - sensor_id
+      - instante
+      - humedad_pct
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          minimum: 1
+          maximum: 9223372036854775807
+          format: int64
+        sensor_id:
+          type: integer
+          minimum: 1
+          maximum: 9223372036854775807
+          format: int64
+        instante:
+          type: string
+          format: date-time
+          description: RFC 3339 con zona explícita y hasta seis decimales. La respuesta usa UTC.
+        humedad_pct:
+          type: number
+          minimum: 0
+          maximum: 100
+          description: Humedad volumétrica en porcentaje.
+  responses:
+    EntradaInvalida:
+      description: Los parámetros o el cuerpo son inválidos.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error:
+              codigo: entrada_invalida
+              mensaje: Los parámetros o el cuerpo son inválidos.
+    CorreoDuplicado:
+      description: El correo ya está registrado.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error:
+              codigo: correo_duplicado
+              mensaje: El correo ya está registrado.
+    ErrorInterno:
+      description: No se pudo atender la solicitud.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error:
+              codigo: error_interno
+              mensaje: No se pudo atender la solicitud.
+    CredencialesInvalidas:
+      description: El correo o la contraseña es incorrecto.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error:
+              codigo: credenciales_invalidas
+              mensaje: El correo o la contraseña es incorrecto.
+      headers:
+        WWW-Authenticate:
+          description: Desafío bearer.
+          schema:
+            type: string
+            enum:
+            - Bearer
+    TokenInvalido:
+      description: Se requiere un token de acceso válido.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error:
+              codigo: token_invalido
+              mensaje: Se requiere un token de acceso válido.
+      headers:
+        WWW-Authenticate:
+          description: Desafío bearer.
+          schema:
+            type: string
+            enum:
+            - Bearer
+    PermisoInsuficiente:
+      description: El rol no tiene permiso para esta operación.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error:
+              codigo: permiso_insuficiente
+              mensaje: El rol no tiene permiso para esta operación.
+    RecursoInexistente:
+      description: El recurso solicitado no existe.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error:
+              codigo: no_encontrado
+              mensaje: El recurso solicitado no existe.
+    SensorConMediciones:
+      description: El sensor conserva mediciones asociadas.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error:
+              codigo: sensor_con_mediciones
+              mensaje: El sensor conserva mediciones asociadas.
+    SensorInexistente:
+      description: El sensor referenciado no existe.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error:
+              codigo: sensor_inexistente
+              mensaje: El sensor referenciado no existe.
+    InstanteDuplicado:
+      description: Ya existe una medición del sensor en ese instante.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error:
+              codigo: instante_duplicado
+              mensaje: Ya existe una medición del sensor en ese instante.
+    MedicionOSensorInexistente:
+      description: La medición o el sensor referenciado no existe.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          examples:
+            medicionInexistente:
+              value:
+                error:
+                  codigo: no_encontrado
+                  mensaje: El recurso solicitado no existe.
+            sensorInexistente:
+              value:
+                error:
+                  codigo: sensor_inexistente
+                  mensaje: El sensor referenciado no existe.

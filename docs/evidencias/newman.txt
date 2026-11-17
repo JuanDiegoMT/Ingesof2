@@ -1,0 +1,36 @@
+AgroDecide · ejecución de la colección Postman con Newman 6.2.3
+Fecha: 2026-11-17
+Entorno: HTTP en 127.0.0.1, SQLite temporal, credenciales sintéticas.
+Fuente: resumen final de Newman y estados HTTP observados por el servidor.
+Resultado: código de salida 0. Se omitieron credenciales, tokens y cuerpos.
+
+                                Ejecutados  Fallidos
+Iteraciones                              1         0
+Solicitudes                             22         0
+Scripts de prueba                       22         0
+Scripts previos                          2         0
+Aserciones                              40         0
+
+N.º  Método  Esperado  Observado  Caso
+ 1   POST      201        201      Registro de agricultor
+ 2   POST      200        200      Inicio de sesión agricultor
+ 3   POST      200        200      Inicio de sesión administrador
+ 4   GET       401        401      Lectura sin token
+ 5   GET       200        200      Perfil propio de agricultor
+ 6   GET       403        403      Perfil denegado al administrador
+ 7   POST      403        403      Creación denegada al agricultor
+ 8   POST      400        400      Profundidad inválida
+ 9   POST      201        201      Crear sensor
+10   GET       200        200      Listar sensores
+11   GET       200        200      Leer sensor
+12   PUT       200        200      Actualizar sensor
+13   POST      201        201      Crear medición
+14   POST      409        409      Medición duplicada
+15   GET       200        200      Listar mediciones del sensor
+16   GET       200        200      Leer medición
+17   PUT       200        200      Actualizar medición
+18   DELETE    409        409      Borrado de sensor con mediciones
+19   DELETE    204        204      Eliminar medición
+20   GET       404        404      Medición eliminada
+21   DELETE    204        204      Eliminar sensor
+22   GET       404        404      Sensor eliminado

@@ -1,0 +1,32 @@
+AgroDecide · evaluación reproducible · 2026-11-17
+
+Humedad · tabla original publicada, NODE_001 a 20 cm
+7e9b24971a60b1f60941ee75a6e1c4f44d6c8771050c8d7fb9730f45807b2fc7  XLSX original de Mendeley
+SHA-256: 8f8299003238d21f0610a71cba4379e6c03092d1b51c53ccd6aee659e03d74d1
+Sensor: NODE_001, profundidad: 20 cm, unidad: % VWC.
+Inicios utilizables: 88.8% de 8665. Corte validación: 2025-08-08 04:00:00+00:00; corte prueba: 2025-10-20 04:00:00+00:00.
+Entrenamiento: 4675 pares.
+validación, Persistencia, n=1520: MAE=0.665; RMSE=0.844; sesgo=-0.008; R²=-0.883. Mayor desvío: +3.490 en 2025-08-22 16:00:00+00:00.
+validación, Regresión media24h, n=1520: MAE=0.516; RMSE=0.664; sesgo=0.171; R²=-0.166. Mayor desvío: +2.981 en 2025-09-04 19:00:00+00:00.
+prueba, Persistencia, n=1497: MAE=0.777; RMSE=0.983; sesgo=0.224; R²=0.954. Mayor desvío: +3.840 en 2025-11-18 08:00:00+00:00.
+prueba, Regresión media24h, n=1497: MAE=0.760; RMSE=0.937; sesgo=0.471; R²=0.958. Mayor desvío: +3.616 en 2025-11-09 05:00:00+00:00.
+
+Humedad · sensibilidad excluyendo la marca COMP
+Entrada inválida: Cobertura insuficiente en una o más particiones.
+SHA-256: d36ac53b5fc104028c599e0ba31ff130b2967d33bf7a2395d66e2de59c187ca2
+Sensor: NODE_001, profundidad: 20 cm, unidad: % VWC.
+Inicios utilizables: 0.0% de 8665. Corte validación: 2025-08-08 04:00:00+00:00; corte prueba: 2025-10-20 04:00:00+00:00.
+Código de salida de sensibilidad: 2
+
+Precio · tomate chonto, Cartagena/Bazurto, semanal
+SHA-256: f3eb06bafa1937c35c651a50228e4b33cb7e6f5ded2a4aa9c85af8d800e4262f
+Semana objetivo | Observado | Persistencia | AR(1)
+2026-06-12 | 4717 | 3967 | 3003.94
+2026-06-19 | 4017 | 4717 | 3874.69
+2026-06-26 | 3633 | 4017 | 3681.08
+2026-07-03 | 2783 | 3633 | 3530.40
+2026-07-10 | 3117 | 2783 | 3126.07
+2026-07-17 | 3417 | 3117 | 3246.68
+2026-07-24 | 3983 | 3417 | 3374.44
+Persistencia (COP/kg): MAE=554.86, RMSE=590.93, sesgo=-2.29
+AR(1) (COP/kg): MAE=491.26, RMSE=747.87, sesgo=-261.39
