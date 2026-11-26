@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AgroDecide · Cliente</title>
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+  <body>
+    <header><h1>AgroDecide</h1></header>
+
+    <!-- Vista de inicio de sesión -->
+    <main id="vista-login" class="tarjeta">
+      <h2>Iniciar sesión</h2>
+      <form id="form-login">
+        <label>Correo
+          <input id="correo" type="email" autocomplete="username" required />
+        </label>
+        <label>Contraseña
+          <input id="contrasena" type="password" autocomplete="current-password" required />
+        </label>
+        <div class="acciones">
+          <button type="submit">Entrar</button>
+          <button type="button" id="btn-registrar" class="secundario">Crear cuenta</button>
+        </div>
+      </form>
+      <p id="login-msg" class="msg"></p>
+    </main>
+
+    <!-- Vista principal (flujo del MVP) -->
+    <main id="vista-app" class="tarjeta" hidden>
+      <div class="barra">
+        <h2>Sensores</h2>
+        <button id="btn-salir" class="secundario">Cerrar sesión</button>
+      </div>
+
+      <p id="aviso-permiso" class="msg error"></p>
+
+      <section id="lista-sensores" aria-live="polite"></section>
+
+      <h3>Crear sensor</h3>
+      <form id="form-crear" class="fila">
+        <input id="c-nombre" placeholder="Nombre" required />
+        <input id="c-ubicacion" placeholder="Ubicación" required />
+        <input id="c-profundidad" type="number" step="0.1" min="0.1" max="1000" placeholder="Prof. (cm)" required />
+        <button type="submit">Agregar</button>
+      </form>
+    </main>
+
+    <!-- Carga en orden de dependencias -->
+    <script src="js/config.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/repositorio.js"></script>
+    <script src="js/sensores.js"></script>
+    <script src="js/estados.js"></script>
+    <script src="js/app.js"></script>
+  </body>
+</html>
