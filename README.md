@@ -58,3 +58,30 @@ python3 -m unittest discover -s tests -v
 ```
 
 [Resultados y pasos de verificación](docs/EVIDENCIA_API.md).
+
+## Nota de compatibilidad: Argon2id sin libargon2 del sistema
+
+El hash de contraseñas usa Argon2id. Por defecto el backend carga la
+biblioteca del sistema `libargon2` mediante `ctypes`. En equipos donde esa
+biblioteca no está instalada (habitualmente Windows), antes fallaba el
+arranque con `RuntimeError: Se requiere la biblioteca del sistema libargon2`.
+
+Ahora el backend usa un **respaldo** automático: si `libargon2` del sistema
+no está disponible, emplea el paquete de Python
+[`argon2-cffi`](https://pypi.org/project/argon2-cffi/), que trae la
+implementación compilada. La selección es automática en
+`agrodecide/seguridad.py::crear_hash_argon2()`:
+
+1. Si `libargon2` del sistema existe, se usa esa (comportamiento original, sin cambios).
+2. Si no, se usa `argon2-cffi` con los mismos parámetros de coste.
+3. Si no hay ninguna de las dos, se lanza un error explicando ambas opciones.
+
+Para habilitar el respaldo en un equipo sin `libargon2`:
+
+```bash
+python3 -m pip install argon2-cffi
+```
+
+En Linux con `libargon2` instalado no se requiere `argon2-cffi` y el
+comportamiento es idéntico al anterior. Los hashes generados por una u otra
+ruta son del mismo formato `$argon2id$...` y compatibles entre entornos.
