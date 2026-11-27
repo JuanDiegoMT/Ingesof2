@@ -8,7 +8,7 @@ Ingeniería de Sistemas y Computación · Ingeniería de Software II (2016702) �
 
 | Campo | Información |
 |---|---|
-| Integrante 1 | [Nombre y documento por confirmar] |
+| Integrante 1 | Oscar Daniel Aguas Quiroz C.C 1102577573 |
 | Integrante 2 | [Nombre y documento por confirmar] |
 | Integrante 3 | [Nombre y documento por confirmar] |
 | Integrante 4 | [Nombre y documento por confirmar] |
