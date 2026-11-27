@@ -9,7 +9,7 @@ from .aplicacion import Identidad, Monitoreo
 from .dominio import ErrorAPI
 from .http import ControladorHTTP
 from .repositorio import RepositorioSQLite
-from .seguridad import HashArgon2, Tokens
+from .seguridad import Tokens, crear_hash_argon2
 
 
 def crear_app():
@@ -25,7 +25,7 @@ def crear_app():
                 or partes.username or partes.path or partes.query or partes.fragment):
             raise ValueError("AGRODECIDE_CORS_ORIGINS requiere orígenes HTTP(S) exactos.")
     repositorio = RepositorioSQLite(ruta)
-    identidad = Identidad(repositorio, HashArgon2(), tokens)
+    identidad = Identidad(repositorio, crear_hash_argon2(), tokens)
     return ControladorHTTP(identidad, Monitoreo(repositorio), origenes)
 
 
