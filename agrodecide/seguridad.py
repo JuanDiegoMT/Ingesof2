@@ -12,6 +12,51 @@ import time
 from .dominio import ErrorAPI
 
 
+class HashArgon2CFFI:
+    """Respaldo con argon2-cffi para entornos sin libargon2 del sistema.
+
+    Produce y verifica el mismo formato Argon2id ($argon2id$...) con idénticos
+    parámetros de coste que HashArgon2, de modo que los hashes son compatibles
+    entre un entorno y otro. Solo se usa cuando find_library("argon2") falla.
+    """
+
+    def __init__(self, low_level):
+        self._low = low_level
+
+    def generar(self, contrasena):
+        return self._low.hash_secret(
+            contrasena.encode(), secrets.token_bytes(16),
+            time_cost=2, memory_cost=19456, parallelism=1,
+            hash_len=32, type=self._low.Type.ID,
+        ).decode("ascii")
+
+    def verificar(self, contrasena, hash_guardado):
+        try:
+            return self._low.verify_secret(
+                hash_guardado.encode("ascii"), contrasena.encode(), type=self._low.Type.ID
+            )
+        except Exception:
+            return False
+
+
+def crear_hash_argon2():
+    """Elige libargon2 del sistema y, si falta, el respaldo argon2-cffi.
+
+    Prefiere la biblioteca del sistema cuando está disponible (comportamiento
+    original). Si no está, intenta el paquete argon2-cffi. Solo falla si no hay
+    ninguna de las dos.
+    """
+    if find_library("argon2"):
+        return HashArgon2()
+    try:
+        import argon2.low_level as low_level
+    except ImportError:
+        raise RuntimeError(
+            "Se requiere la biblioteca del sistema libargon2 o el paquete argon2-cffi."
+        ) from None
+    return HashArgon2CFFI(low_level)
+
+
 class HashArgon2:
     def __init__(self):
         biblioteca = find_library("argon2")
