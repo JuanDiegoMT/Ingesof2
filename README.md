@@ -4,7 +4,12 @@ AgroDecide es un proyecto académico de Ingeniería de Software II en la Univers
 
 [Repositorio de entrega](https://github.com/JuanDiegoMT/Ingesof2)
 
-**Integrantes y grupo** · Pendientes de confirmación por el equipo.
+**Integrantes**
+- Juan Diego Mendoza
+- Sergio Tovar Vasquez
+- Oscar Aguas
+- Nicolas Arturo Jaramillo
+- Andres Hernandez
 
 ## Tecnologías
 
